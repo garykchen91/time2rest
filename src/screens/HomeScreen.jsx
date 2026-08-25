@@ -56,7 +56,7 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
       `請輸入自訂提醒間隔 (${MIN_CUSTOM_MINUTES} 到 ${MAX_CUSTOM_MINUTES} 分鐘)`,
       currentValue
     )
-    if (input === null) return // 使用者按取消
+    if (input === null) return
     const num = Number(input.trim())
     if (!Number.isFinite(num) || !Number.isInteger(num) || num < MIN_CUSTOM_MINUTES || num > MAX_CUSTOM_MINUTES) {
       window.alert(`請輸入 ${MIN_CUSTOM_MINUTES} 到 ${MAX_CUSTOM_MINUTES} 之間的整數`)
@@ -87,11 +87,12 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
       padding: '20px 24px',
       minHeight: '100dvh'
     }}>
+      {/* Header */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '32px'
+        marginBottom: '16px'
       }}>
         <span style={{ fontSize: '17px', fontWeight: 500 }}>Time to Rest</span>
         <div style={{ display: 'flex', gap: '20px' }}>
@@ -104,18 +105,22 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
         </div>
       </div>
 
-      <div style={{ textAlign: 'center', marginTop: '40px' }}>
+      {/* 動畫區 */}
+      <PlaceholderAnimationArea />
+
+      {/* 時間顯示 */}
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <p style={{
           fontSize: '13px',
           color: isRunning ? 'var(--primary)' : 'var(--text-medium)',
           letterSpacing: '2px',
-          marginBottom: '16px',
+          marginBottom: '8px',
           fontWeight: isRunning ? 500 : 400
         }}>
           {isRunning ? '倒數中' : '提醒間隔'}
         </p>
         <p style={{
-          fontSize: '84px',
+          fontSize: '64px',
           fontWeight: 500,
           color: isRunning ? 'var(--primary)' : 'var(--text-dark)',
           lineHeight: 1,
@@ -125,18 +130,19 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
         </p>
         {isRunning && (
           <p style={{
-            fontSize: '14px',
+            fontSize: '13px',
             color: 'var(--text-medium)',
-            marginTop: '16px'
+            marginTop: '10px'
           }}>
             距離下次休息
           </p>
         )}
       </div>
 
+      {/* 進度條 (倒數中) */}
       {isRunning && (
         <div style={{
-          margin: '32px 8px 0',
+          margin: '20px 8px 0',
           height: '6px',
           background: 'var(--bg-soft)',
           borderRadius: '3px',
@@ -151,22 +157,23 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
         </div>
       )}
 
+      {/* 時間選項按鈕 (未啟動時顯示) */}
       {!isRunning && (
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'center',
-          gap: '8px',
-          margin: '40px 0 0'
+          gap: '6px',
+          margin: '20px 0 0'
         }}>
           {TIME_OPTIONS.map(min => (
             <button
               key={min}
               onClick={() => handleSelectTime(min)}
               style={{
-                fontSize: '14px',
-                padding: '10px 16px',
-                borderRadius: '20px',
+                fontSize: '13px',
+                padding: '8px 14px',
+                borderRadius: '18px',
                 background: settings.timerMinutes === min ? 'var(--primary-pale)' : 'var(--bg-soft)',
                 color: settings.timerMinutes === min ? 'var(--primary-dark)' : 'var(--text-medium)',
                 fontWeight: settings.timerMinutes === min ? 500 : 400
@@ -178,9 +185,9 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
           <button
             onClick={handleCustomTime}
             style={{
-              fontSize: '14px',
-              padding: '10px 16px',
-              borderRadius: '20px',
+              fontSize: '13px',
+              padding: '8px 14px',
+              borderRadius: '18px',
               background: isCustomTime ? 'var(--primary-pale)' : 'var(--bg-soft)',
               color: isCustomTime ? 'var(--primary-dark)' : 'var(--text-medium)',
               fontWeight: isCustomTime ? 500 : 400
@@ -191,7 +198,8 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
         </div>
       )}
 
-      <div style={{ marginTop: 'auto', paddingTop: '32px' }}>
+      {/* 開始/停止 按鈕 */}
+      <div style={{ marginTop: 'auto', paddingTop: '24px' }}>
         {!isRunning ? (
           <button
             onClick={handleStart}
@@ -236,5 +244,47 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
         )}
       </div>
     </div>
+  )
+}
+
+// 動畫區 佔位 - 未來替換成 Lottie 動畫
+function PlaceholderAnimationArea() {
+  return (
+    <>
+      <style>{`
+        @keyframes dog-breathe {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.04); }
+        }
+        .dog-idle {
+          animation: dog-breathe 3s ease-in-out infinite;
+          transform-origin: center;
+        }
+      `}</style>
+      <div style={{
+        height: '220px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'var(--bg-soft)',
+        borderRadius: '16px',
+        marginTop: '8px'
+      }}>
+        <div className="dog-idle">
+          <svg width="150" height="130" viewBox="0 0 200 160">
+            <ellipse cx="100" cy="130" rx="80" ry="22" fill="#E88E3A"/>
+            <ellipse cx="100" cy="130" rx="60" ry="14" fill="#FBE5C4"/>
+            <ellipse cx="55" cy="120" rx="18" ry="10" fill="#D97A28"/>
+            <circle cx="150" cy="110" r="32" fill="#E88E3A"/>
+            <ellipse cx="152" cy="120" rx="15" ry="12" fill="#FBE5C4"/>
+            <path d="M 130 82 L 120 62 Q 128 68 138 82 Z" fill="#D97A28"/>
+            <path d="M 172 82 L 182 62 Q 174 68 164 82 Z" fill="#D97A28"/>
+            <path d="M 138 108 Q 143 106 148 108" stroke="#1a1a1a" strokeWidth="2" fill="none" strokeLinecap="round"/>
+            <path d="M 155 108 Q 160 106 165 108" stroke="#1a1a1a" strokeWidth="2" fill="none" strokeLinecap="round"/>
+            <ellipse cx="152" cy="120" rx="3" ry="2.5" fill="#1a1a1a"/>
+          </svg>
+        </div>
+      </div>
+    </>
   )
 }
