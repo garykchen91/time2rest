@@ -1,30 +1,12 @@
 import { useEffect } from 'react'
+import { playSound } from '../lib/soundPlayer.js'
 
 export default function ReminderScreen({ settings, onEnd, onSnooze }) {
   useEffect(() => {
     if (settings.soundOn) {
-      playPlaceholderSound()
+      playSound(settings.soundType, settings.soundVolume)
     }
   }, [])
-
-  const playPlaceholderSound = () => {
-    try {
-      const AudioContext = window.AudioContext || window.webkitAudioContext
-      if (!AudioContext) return
-      const ctx = new AudioContext()
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      osc.frequency.value = 660
-      gain.gain.setValueAtTime(0.15, ctx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5)
-      osc.start()
-      osc.stop(ctx.currentTime + 0.5)
-    } catch (e) {
-      // silent fail
-    }
-  }
 
   const handleSnooze = () => {
     onSnooze()
