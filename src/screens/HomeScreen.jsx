@@ -1,11 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
 
 const TIME_OPTIONS = [5, 10, 15, 25, 30, 45, 60]
+const MIN_CUSTOM_MINUTES = 3
+const MAX_CUSTOM_MINUTES = 300
 
 export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenSettings }) {
   const [isRunning, setIsRunning] = useState(false)
   const [remainingSeconds, setRemainingSeconds] = useState(settings.timerMinutes * 60)
   const intervalRef = useRef(null)
+
+  const isCustomTime = !TIME_OPTIONS.includes(settings.timerMinutes)
 
   useEffect(() => {
     if (!isRunning) {
@@ -43,6 +47,22 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
   const handleSelectTime = (minutes) => {
     if (isRunning) return
     updateSettings({ timerMinutes: minutes })
+  }
+
+  const handleCustomTime = () => {
+    if (isRunning) return
+    const currentValue = isCustomTime ? settings.timerMinutes : ''
+    const input = window.prompt(
+      `請輸入自訂提醒間隔 (${MIN_CUSTOM_MINUTES} 到 ${MAX_CUSTOM_MINUTES} 分鐘)`,
+      currentValue
+    )
+    if (input === null) return // 使用者按取消
+    const num = Number(input.trim())
+    if (!Number.isFinite(num) || !Number.isInteger(num) || num < MIN_CUSTOM_MINUTES || num > MAX_CUSTOM_MINUTES) {
+      window.alert(`請輸入 ${MIN_CUSTOM_MINUTES} 到 ${MAX_CUSTOM_MINUTES} 之間的整數`)
+      return
+    }
+    updateSettings({ timerMinutes: num })
   }
 
   const toggleSound = () => {
@@ -155,6 +175,19 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
               {min} 分鐘
             </button>
           ))}
+          <button
+            onClick={handleCustomTime}
+            style={{
+              fontSize: '14px',
+              padding: '10px 16px',
+              borderRadius: '20px',
+              background: isCustomTime ? 'var(--primary-pale)' : 'var(--bg-soft)',
+              color: isCustomTime ? 'var(--primary-dark)' : 'var(--text-medium)',
+              fontWeight: isCustomTime ? 500 : 400
+            }}
+          >
+            {isCustomTime ? `⚙ ${settings.timerMinutes} 分鐘` : '⚙ 自訂'}
+          </button>
         </div>
       )}
 
