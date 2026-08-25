@@ -92,7 +92,7 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: '16px'
+        marginBottom: '12px'
       }}>
         <span style={{ fontSize: '17px', fontWeight: 500 }}>Time to Rest</span>
         <div style={{ display: 'flex', gap: '20px' }}>
@@ -105,22 +105,22 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
         </div>
       </div>
 
-      {/* 動畫區 */}
+      {/* 動畫區 - 用 flex: 1 自動吃掉剩餘空間 */}
       <PlaceholderAnimationArea />
 
       {/* 時間顯示 */}
-      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+      <div style={{ textAlign: 'center', marginTop: '16px' }}>
         <p style={{
           fontSize: '13px',
           color: isRunning ? 'var(--primary)' : 'var(--text-medium)',
           letterSpacing: '2px',
-          marginBottom: '8px',
+          marginBottom: '6px',
           fontWeight: isRunning ? 500 : 400
         }}>
           {isRunning ? '倒數中' : '提醒間隔'}
         </p>
         <p style={{
-          fontSize: '64px',
+          fontSize: '56px',
           fontWeight: 500,
           color: isRunning ? 'var(--primary)' : 'var(--text-dark)',
           lineHeight: 1,
@@ -132,7 +132,7 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
           <p style={{
             fontSize: '13px',
             color: 'var(--text-medium)',
-            marginTop: '10px'
+            marginTop: '8px'
           }}>
             距離下次休息
           </p>
@@ -142,7 +142,7 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
       {/* 進度條 (倒數中) */}
       {isRunning && (
         <div style={{
-          margin: '20px 8px 0',
+          margin: '16px 8px 0',
           height: '6px',
           background: 'var(--bg-soft)',
           borderRadius: '3px',
@@ -164,7 +164,7 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
           flexWrap: 'wrap',
           justifyContent: 'center',
           gap: '6px',
-          margin: '20px 0 0'
+          margin: '16px 0 0'
         }}>
           {TIME_OPTIONS.map(min => (
             <button
@@ -199,7 +199,7 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
       )}
 
       {/* 開始/停止 按鈕 */}
-      <div style={{ marginTop: 'auto', paddingTop: '24px' }}>
+      <div style={{ paddingTop: '20px' }}>
         {!isRunning ? (
           <button
             onClick={handleStart}
@@ -247,7 +247,7 @@ export default function HomeScreen({ settings, updateSettings, onTimeUp, onOpenS
   )
 }
 
-// 動畫區 佔位 - 未來替換成 Lottie 動畫
+// 動畫區 佔位 - flex:1 自動吃剩餘空間
 function PlaceholderAnimationArea() {
   return (
     <>
@@ -262,16 +262,16 @@ function PlaceholderAnimationArea() {
         }
       `}</style>
       <div style={{
-        height: '220px',
+        flex: 1,
+        minHeight: '260px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         background: 'var(--bg-soft)',
-        borderRadius: '16px',
-        marginTop: '8px'
+        borderRadius: '16px'
       }}>
         <div className="dog-idle">
-          <svg width="150" height="130" viewBox="0 0 200 160">
+          <svg width="200" height="170" viewBox="0 0 200 160">
             <ellipse cx="100" cy="130" rx="80" ry="22" fill="#E88E3A"/>
             <ellipse cx="100" cy="130" rx="60" ry="14" fill="#FBE5C4"/>
             <ellipse cx="55" cy="120" rx="18" ry="10" fill="#D97A28"/>
