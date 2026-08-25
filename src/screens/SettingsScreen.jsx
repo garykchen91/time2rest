@@ -1,7 +1,21 @@
+import { playSound, SOUND_OPTIONS, VOLUME_OPTIONS } from '../lib/soundPlayer.js'
+
 const SNOOZE_OPTIONS = [1, 3, 5, 10, 15]
 
 export default function SettingsScreen({ settings, updateSettings, onBack }) {
-  const version = '1.0.0'
+  const version = '1.0.3'
+
+  const handleSoundTypeChange = (v) => {
+    updateSettings({ soundType: v })
+    // 切換時自動試聽
+    playSound(v, settings.soundVolume || 'medium')
+  }
+
+  const handleVolumeChange = (v) => {
+    updateSettings({ soundVolume: v })
+    // 切換時自動試聽
+    playSound(settings.soundType || 'ding', v)
+  }
 
   return (
     <div style={{
@@ -30,13 +44,27 @@ export default function SettingsScreen({ settings, updateSettings, onBack }) {
           value={settings.soundOn}
           onChange={(v) => updateSettings({ soundOn: v })}
         />
+        <SelectRowGeneric
+          title="音效類型"
+          subtitle="切換時可試聽"
+          value={settings.soundType || 'ding'}
+          options={SOUND_OPTIONS}
+          onChange={handleSoundTypeChange}
+        />
+        <SelectRowGeneric
+          title="音量"
+          subtitle="切換時可試聽"
+          value={settings.soundVolume || 'medium'}
+          options={VOLUME_OPTIONS}
+          onChange={handleVolumeChange}
+        />
         <ToggleRow
           title="循環模式"
           subtitle="休息完自動開始下一輪"
           value={settings.loopMode}
           onChange={(v) => updateSettings({ loopMode: v })}
         />
-        <SelectRow
+        <SelectRowNumber
           title="延遲時間"
           subtitle="按延遲後多久再提醒"
           value={settings.snoozeMinutes}
@@ -111,7 +139,43 @@ function ToggleRow({ title, subtitle, value, onChange }) {
   )
 }
 
-function SelectRow({ title, subtitle, value, options, onChange, suffix }) {
+function SelectRowGeneric({ title, subtitle, value, options, onChange }) {
+  return (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '16px 12px',
+      borderRadius: '8px'
+    }}>
+      <div style={{ flex: 1 }}>
+        <p style={{ fontSize: '15px', color: 'var(--text-dark)' }}>{title}</p>
+        <p style={{ fontSize: '12px', color: 'var(--text-medium)', marginTop: '2px' }}>{subtitle}</p>
+      </div>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        style={{
+          fontSize: '14px',
+          padding: '8px 12px',
+          border: '1px solid var(--border)',
+          borderRadius: '8px',
+          background: 'white',
+          color: 'var(--text-dark)',
+          fontFamily: 'inherit'
+        }}
+      >
+        {options.map(opt => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+}
+
+function SelectRowNumber({ title, subtitle, value, options, onChange, suffix }) {
   return (
     <div style={{
       display: 'flex',
