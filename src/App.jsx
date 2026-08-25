@@ -5,6 +5,8 @@ import SettingsScreen from './screens/SettingsScreen.jsx'
 
 const DEFAULT_SETTINGS = {
   soundOn: true,
+  soundType: 'ding',
+  soundVolume: 'medium',
   loopMode: true,
   snoozeMinutes: 5,
   timerMinutes: 25
